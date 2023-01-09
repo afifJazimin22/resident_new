@@ -18,3 +18,7 @@ body {
     content: " *";
     color: red;
 }
+
+.bg-nav {
+    background-color: rgb(62, 67, 114);
+}

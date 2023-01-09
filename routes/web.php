@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ResidentController;
+use App\Http\Controllers\CarLogController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,7 +17,7 @@ use App\Http\Controllers\ResidentController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
 });
 
 Route::get('/login', [LoginController::class, 'index'])->name('login');
@@ -32,3 +33,7 @@ Route::post('newresident', [ResidentController::class, 'store'])->name('resident
 
 Route::get('show/{id}', [ResidentController::class, 'show'])->name('resident.show');
 Route::delete('residents/{id}', [ResidentController::class, 'delete'])->name('residents.delete');
+
+//carlog
+
+Route::get('/carlog', [CarLogController::class, 'index'])->name('car.index');

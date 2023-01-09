@@ -1,5 +1,5 @@
 @extends('layouts.master')
-
+@include('layouts.navbar')
 @section('content')
 
     @include('resident.create')
@@ -7,10 +7,11 @@
     @include('resident.edit')
     <div class="container-fluid">
         <div class="row d-flex justify-content-center align-items-center px-5">
-            <h1 class="text-white text-start">Resident Management</h1>
+            {{-- <h1 class="text-white text-start">Resident Management</h1> --}}
             <div class="card border-1 col-12 m-3">
                 <div class="card-body">
                     <div class="text-end mb-3">
+                        <h1 class="text-dark text-start">Resident Info</h1>
 
                         <a id="addrecord" class="btn btn-success">Add Record</a>
                     </div>
@@ -49,7 +50,7 @@
                                             <td>{{ $value->carColour }}</td>
                                             <td>
                                                 <a class="btn btn-primary"
-                                                    href="{{ route('resident.show', ['id' => $value->id]) }}">view</a>
+                                                    href="{{ route('resident.show', ['id' => $value->id]) }}"><i class="fa-solid fa-eye"></i></a>
                                                 {{-- <button type="button" class="btn btn-info" data-bs-toggle="modal"
                                                     data-bs-target="#showmodal-{{ $value->id }}">
                                                     <i class="fa-solid fa-eye"></i>
@@ -133,5 +134,7 @@
                 }
             })
         });
+
+
     </script>
 @endsection
