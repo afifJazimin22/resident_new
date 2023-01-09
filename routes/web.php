@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ResidentController;
 use App\Http\Middleware\CustomAuthMiddleware;
+use App\Http\Controllers\CarLogController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,3 +36,9 @@ Route::post('newresident', [ResidentController::class, 'store'])->name('resident
 
 Route::get('show/{id}', [ResidentController::class, 'show'])->name('resident.show')->middleware('custom-auth');
 Route::delete('residents/{id}', [ResidentController::class, 'delete'])->name('residents.delete')->middleware('custom-auth');
+Route::get('show/{id}', [ResidentController::class, 'show'])->name('resident.show');
+Route::delete('residents/{id}', [ResidentController::class, 'delete'])->name('residents.delete');
+
+//carlog
+
+Route::get('/carlog', [CarLogController::class, 'index'])->name('car.index');
