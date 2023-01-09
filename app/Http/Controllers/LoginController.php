@@ -18,17 +18,37 @@ class LoginController extends Controller
 
     public function login_action(Request $request)
     {
-        $request ->validate([
-            'username'=> 'required',
-            'password'=> 'required',
+        // $validateUser = $request ->validate([
+        //         'username'=> 'required',
+        //         'password'=> 'required',
+        //     ]);
+
+
+        // if (Auth::attempt(['username'=>$validateUser['username'], 'password'=>$validateUser['password']])) {
+        //     return redirect()->intended('/resident');
+        // }
+        // return back()->withErrors('password', 'wrong username or password');
+        $request->validate([
+            'username' => 'required',
+            'password' => 'required',
         ]);
 
 
-        if (Auth::attempt(['username'=>$request->username, 'password'=>$request->password])) {
-            $request->session()->regenerate();
-            return redirect()->intended('/');
+        $credentials = $request->only('username', 'password');
+        if (Auth::attempt($credentials)) {
+            // Alert::success('Success', 'Login successfull');
+            return redirect()->route('resident.index');
         }
-        return back()->withErrors('password', 'wrong username or password');
+        // Alert::error('Error', 'Login failed');
+        return redirect("/login");
+    }
+
+    public function logout()
+    {
+        Session::flush();
+        Auth::logout();
+
+        return Redirect('/');
     }
 
 }

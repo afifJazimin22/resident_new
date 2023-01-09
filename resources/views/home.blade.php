@@ -7,7 +7,7 @@
 
             <div class="card text-white bg-transparent border-0">
                 <div class="card-body">
-                    <h1 class="text-white fs-bold align-middle">Welcome To Resident Management System</h1>
+                    <h1 class="text-white fs-bold align-middle">Welcome To Sakura Parking Entry Management System</h1>
 
                     <a href="{{ route('login') }}" class="col-2 btn btn-success text-center">Login</a>
                 </div>
