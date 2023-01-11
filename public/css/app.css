@@ -36,3 +36,19 @@ body {
         rgba(7, 30, 98, 1) 100%
     );
 }
+
+.sakura-img {
+    background-repeat: no-repeat;
+    width: 2rem;
+    height: 2rem;
+}
+.sakura-home {
+    background-repeat: no-repeat;
+    width: 100px;
+    height: 100px;
+}
+.sakura-login {
+    background-repeat: no-repeat;
+    width: 5rem;
+    height: 5rem;
+}

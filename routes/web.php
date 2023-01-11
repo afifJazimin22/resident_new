@@ -36,9 +36,9 @@ Route::post('newresident', [ResidentController::class, 'store'])->name('resident
 
 Route::get('show/{id}', [ResidentController::class, 'show'])->name('resident.show')->middleware('custom-auth');
 Route::delete('residents/{id}', [ResidentController::class, 'delete'])->name('residents.delete')->middleware('custom-auth');
+Route::delete('residentbulkdelete', [ResidentController::class, 'massdelete'])->name('residents.massdelete');
 Route::get('show/{id}', [ResidentController::class, 'show'])->name('resident.show');
-Route::delete('residents/{id}', [ResidentController::class, 'delete'])->name('residents.delete');
-
+Route::put('/update', [ResidentController::class, 'update'])->name('resident.update');
 //carlog
 
 Route::get('/carlog', [CarLogController::class, 'index'])->name('car.index');

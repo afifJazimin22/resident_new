@@ -16,17 +16,18 @@ class ResidentController extends Controller
      */
     public function index()
     {
-        $resident = Resident::join('cars', 'cars.resident_ID', '=', 'residents.id')->get([
-            'residents.id',
-            'residents.name',
-            'residents.phone',
-            'residents.roomNumber',
-            'residents.faculty',
-            'cars.carType',
-            'cars.carColour',
-            'cars.plateNumber'
+        // $resident = Resident::join('cars', 'cars.resident_ID', '=', 'residents.id')->get([
+        //     'residents.id',
+        //     'residents.name',
+        //     'residents.phone',
+        //     'residents.roomNumber',
+        //     'residents.faculty',
+        //     'cars.carType',
+        //     'cars.carColour',
+        //     'cars.plateNumber'
 
-        ]);
+        // ]);
+        $resident = DB::table('residents')->join('cars', 'cars.resident_ID', '=', 'residents.id')->paginate(1);
         $i =0;
         return view('resident.index', compact('resident', 'i'));
     }
@@ -88,9 +89,16 @@ class ResidentController extends Controller
      * @param  \App\Models\Car  $car
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Car $car)
+    public function update(Request $request)
     {
-        //
+        $id = $request->id;
+        DB::table('residents')
+        ->join('cars', 'residents.id', '=', 'cars.resident_ID')->where('residents.id', $request->id)->update([
+            'residents.name'=>$request->name, 'residents.phone'=>$request->phone, 'residents.roomNumber'=>$request->roomNumber, 'residents.faculty'=>$request->faculty, 'cars.plateNumber'=>$request->plateNumber, 'cars.carType'=>$request->carType, 'cars.carColour'=>$request->carColour
+        ]);
+
+        // Alert::success('Success', 'Updated successfully');
+        return redirect()->route('resident.index');
     }
 
     /**
@@ -101,17 +109,27 @@ class ResidentController extends Controller
      */
     public function delete($id)
     {
-        // $resident->delete();
-
-        // $resident = Resident::with('car')->find($id);
-
-        // $resident = delete();
-
-        // DB::table('cars')->join('residents', 'residents.id', '=', 'cars.resident_ID')->where(['residents.id', $id, 'cars.'])->delete();
         DB::table('cars')->where('resident_ID', $id)->delete();
         DB::table('residents')->where('id', $id)->delete();
-        // $resident->delete();
 
         return back();
+    }
+
+    public function massdelete(Request $request)
+    {   
+        $ids = $request->input('user_ids');
+        // $ids = $request->ids;
+        // console.log($ids);
+        foreach ($ids as $id) {
+
+            $data = DB::table('residents')->leftJoin('cars', 'residents.id', '=', 'cars.resident_ID')->where('residents.id', $id);
+            DB::table('cars')->where('resident_ID', $id)->delete();
+            $data->delete();
+        }
+        
+        // return response()->json(['status'=> true, 'message'=>'Deleted successfully.']);
+        // return response('Records deleted successfully.', 200);
+        return response()->json(['success'=>"Products Deleted successfully."]); 
+        // return redirect()->route('resident.index');
     }
 }
