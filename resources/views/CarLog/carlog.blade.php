@@ -38,7 +38,7 @@
                                 @endif
                             </tbody>
                         </table>
-                        <div class="d-flex">
+                        <div class="d-flex justify-content-center">
                             {!! $carLog->links() !!}
                         </div>
                     </div>

@@ -3,18 +3,18 @@
 @section('content')
 
     @include('resident.create')
-    <div class="container-fluid pt-4">
+    <div class="container-fluid pt-4 overflow-auto">
         <div class="row d-flex justify-content-center align-items-center px-5">
             {{-- <h1 class="text-white text-start">Resident Management</h1> --}}
             <div class="card border-1 col-12 m-3">
                 <div class="card-body">
-                    <div class="text-end mb-3">
-                        <h1 class="text-dark text-start fw-bold pb-2"><i
-                                class="fa-solid fa-building-user fs-1 me-2"></i>Resident
+                    @if (session('error'))
+                        <div class="alert alert-danger">{{ session('error') }}</div>
+                    @endif
+                    <div class="text-end">
+                        <h1 class="text-dark text-start fw-bold"><i class="fa-solid fa-building-user fs-1 me-2"></i>Resident
                             Info
                         </h1>
-
-                        {{-- <a class="btn btn-danger delete-all">Delete All</a> --}}
                         <button class="btn btn-danger delete_all"><span><i class="fa-solid fa-trash me-2"></i>Delete
                                 All</span></button>
                         <a id="addrecord" class="btn btn-success"><span><i class="fa-solid fa-file-circle-plus me-2"></i>Add
@@ -55,7 +55,7 @@
                                             <td>{{ $value->carType }}</td>
                                             <td>{{ $value->carColour }}</td>
                                             <td>
-                                                <button type="button" class="btn btn-info" data-bs-toggle="modal"
+                                                <button type="button" class="btn btn-info p-1" data-bs-toggle="modal"
                                                     data-bs-target="#editModal-{{ $value->id }}">
                                                     <i class="far fa-edit"></i>
                                                 </button>
@@ -68,17 +68,11 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                {{-- <button type="button" class="btn btn-info" data-bs-toggle="modal"
-                                                    data-bs-target="#showmodal-{{ $value->id }}">
-                                                    <i class="fa-solid fa-eye"></i>
-                                                    <div id="showmodal-{{ $value->id }}" class="modal" tabindex="-1">
-                                                        @include('resident.show')
-                                                    </div> --}}
                                                 <form action="{{ route('residents.delete', ['id' => $value->id]) }}"
                                                     method="POST" style="display: inline-block;">
                                                     @csrf
                                                     <input type="hidden" name="_method" value="DELETE">
-                                                    <button type="submit" class="btn btn-danger _showconfirm">
+                                                    <button type="submit" class="btn btn-danger _showconfirm p-1">
                                                         <i class="far fa-trash-alt"></i>
                                                     </button>
                                                 </form>
@@ -195,7 +189,7 @@
                         confirmButtonText: 'Yes, delete it!'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            // var strIds = idsArr.join(",");
+                            var strIds = idsArr.join(",");
                             console.log(idsArr);
                             $.ajax({
                                 url: "{{ route('residents.massdelete') }}",
@@ -220,7 +214,7 @@
                                         });
                                         Swal.fire(
                                             'Deleted!',
-                                            'Records deleted',
+                                            strIds + ' Records deleted',
                                             'success'
                                         )
                                     } else if (data['error']) {

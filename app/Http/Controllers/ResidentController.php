@@ -6,6 +6,8 @@ use App\Models\Car;
 use App\Models\Resident;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
+Use Alert;
 
 class ResidentController extends Controller
 {
@@ -16,18 +18,7 @@ class ResidentController extends Controller
      */
     public function index()
     {
-        // $resident = Resident::join('cars', 'cars.resident_ID', '=', 'residents.id')->get([
-        //     'residents.id',
-        //     'residents.name',
-        //     'residents.phone',
-        //     'residents.roomNumber',
-        //     'residents.faculty',
-        //     'cars.carType',
-        //     'cars.carColour',
-        //     'cars.plateNumber'
-
-        // ]);
-        $resident = DB::table('residents')->join('cars', 'cars.resident_ID', '=', 'residents.id')->paginate(1);
+        $resident = DB::table('residents')->join('cars', 'cars.resident_ID', '=', 'residents.id')->paginate(5);
         $i =0;
         return view('resident.index', compact('resident', 'i'));
     }
@@ -36,7 +27,8 @@ class ResidentController extends Controller
   
     public function store(Request $request)
     {
-        $resident = DB::table('residents')->insertGetId([
+        try {
+            $resident = DB::table('residents')->insertGetId([
             'id'=> $request->id,
             'name'=> $request->name,
             'phone'=> $request->phone,
@@ -44,51 +36,32 @@ class ResidentController extends Controller
             'faculty'=> $request->faculty,
             'created_at' => now(),
             'updated_at'=> now()
-        ]);
+            ]);
 
-        DB::table('cars')->insert([
-            'resident_ID'=> $resident,
-            'plateNumber'=> $request->plateNumber,
-            'carType'=> $request->carType,
-            'carColour'=> $request->carColour,
-            'created_at' => now(),
-            'updated_at'=> now()
-        ]);
+            DB::table('cars')->insert([
+                'resident_ID'=> $resident,
+                'plateNumber'=> $request->plateNumber,
+                'carType'=> $request->carType,
+                'carColour'=> $request->carColour,
+                'created_at' => now(),
+                'updated_at'=> now()
+            ]);
+        } catch (QueryException $e) {
+            $message = $e->getMessage();
+            Alert::error('Opsss!', $message);
+            return redirect()->back();
+        }
 
         return redirect()->route('resident.index');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Car  $car
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {   
-        // $resident = Resident::with('car')->find($id);
         $resident = DB::table('residents')->join('cars', 'residents.id', '=', 'cars.resident_ID')->select('residents.*', 'cars.*')->where('residents.id', $id)->first();
         return view('resident.show', compact('resident'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Car  $car
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Car $car)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Car  $car
-     * @return \Illuminate\Http\Response
-     */
+    
     public function update(Request $request)
     {
         $id = $request->id;
@@ -97,20 +70,19 @@ class ResidentController extends Controller
             'residents.name'=>$request->name, 'residents.phone'=>$request->phone, 'residents.roomNumber'=>$request->roomNumber, 'residents.faculty'=>$request->faculty, 'cars.plateNumber'=>$request->plateNumber, 'cars.carType'=>$request->carType, 'cars.carColour'=>$request->carColour
         ]);
 
-        // Alert::success('Success', 'Updated successfully');
+        Alert::success('Success', 'Record updated successfully');
         return redirect()->route('resident.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Car  $car
-     * @return \Illuminate\Http\Response
-     */
+ 
     public function delete($id)
     {
         DB::table('cars')->where('resident_ID', $id)->delete();
         DB::table('residents')->where('id', $id)->delete();
+
+        $message = $id . " records deleted successfully!";
+
+        Alert::success('Success', $message);
 
         return back();
     }
@@ -118,8 +90,6 @@ class ResidentController extends Controller
     public function massdelete(Request $request)
     {   
         $ids = $request->input('user_ids');
-        // $ids = $request->ids;
-        // console.log($ids);
         foreach ($ids as $id) {
 
             $data = DB::table('residents')->leftJoin('cars', 'residents.id', '=', 'cars.resident_ID')->where('residents.id', $id);
@@ -127,9 +97,6 @@ class ResidentController extends Controller
             $data->delete();
         }
         
-        // return response()->json(['status'=> true, 'message'=>'Deleted successfully.']);
-        // return response('Records deleted successfully.', 200);
-        return response()->json(['success'=>"Products Deleted successfully."]); 
-        // return redirect()->route('resident.index');
+        return response()->json(['success'=>"Records Deleted successfully."]); 
     }
 }

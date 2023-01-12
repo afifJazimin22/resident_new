@@ -14,7 +14,7 @@ class CarLogController extends Controller
      */
     public function index()
     {
-        $carLog = CarLog::latest()->paginate(10);
+        $carLog = CarLog::latest()->paginate(5);
         $i=0;
 
         return view('CarLog.carlog', compact('carLog', 'i'));

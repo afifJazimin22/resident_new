@@ -1,13 +1,29 @@
-html,
+/* html,
 body {
     margin: 0;
     height: 100%;
-    overflow: hidden;
-}
+    overflow: auto;
+} */
 body {
     background-image: url("/images/bg.jpg");
     background-size: cover;
     background-repeat: no-repeat;
+    scrollbar-width: thin; /* "auto" or "thin" */
+    scrollbar-color: blue orange; /* scroll thumb and track */
+}
+
+body::-webkit-scrollbar {
+    width: 12px; /* width of the entire scrollbar */
+}
+
+body::-webkit-scrollbar-track {
+    background: rgb(172, 172, 172); /* color of the tracking area */
+}
+
+body::-webkit-scrollbar-thumb {
+    background-color: rgb(26, 37, 82); /* color of the scroll thumb */
+    border-radius: 20px; /* roundness of the scroll thumb */
+    border: 3px solid rgb(128, 127, 127); /* creates padding around scroll thumb */
 }
 .form-group .required::after {
     content: " *";

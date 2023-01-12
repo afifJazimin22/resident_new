@@ -1,5 +1,5 @@
 @extends('layouts.master')
-<nav class="navbar navbar-expand-lg navbar-light bg-nav">
+<nav class="navbar navbar-expand-lg navbar-light bg-nav sticky-top">
     <div class="container-fluid">
         <a class="navbar-brand text-color px-3" href="#"><img
                 src="{{ asset('images/Realistic-sakura-or-cherry-blossom-Premium-vector-PNG.png') }}" class="sakura-img">
